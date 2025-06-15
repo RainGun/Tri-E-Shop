@@ -9,10 +9,22 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Initializes the HttpClient to connect with the Platform.sh API.
-[cite_start]
+
 builder.Services.AddHttpClient("PlatformSH", client =>
 {
     client.BaseAddress = new Uri("https://api.platform.sh/api/projects/pj2g557uk2z2g/");
+});
+
+var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: myAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
 });
 
 // Builder 
@@ -29,6 +41,9 @@ if (app.Environment.IsDevelopment())
 }
 
 // Redirects HTTP requests,
+app.UseHttpsRedirection();
+
+// Middleware CORS
 app.UseHttpsRedirection();
 
 // Defines controller paths for API use.
