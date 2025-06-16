@@ -1,7 +1,6 @@
-// Web application Builder.
 var builder = WebApplication.CreateBuilder(args);
 
-// Services necessary for the controllers to function.
+// Add services to the container.
 builder.Services.AddControllers();
  
 // Adds services from Swagger/OpenAPI documentation.
@@ -41,9 +40,6 @@ if (app.Environment.IsDevelopment())
 }
 
 // Redirects HTTP requests,
-app.UseHttpsRedirection();
-
-// Middleware CORS
 app.UseHttpsRedirection();
 
 // Defines controller paths for API use.
