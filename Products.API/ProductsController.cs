@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Products.API.Dtos;
-using System.Reflection.Metadata;
 
 namespace Products.API.Controllers
 { 
