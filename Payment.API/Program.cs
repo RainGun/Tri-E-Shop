@@ -13,13 +13,11 @@ var app = builder.Build();
 // HTTP request pipeline.
 
 // Enables the swagger and UI.
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 
 // Redirects HTTP requests,
 app.UseHttpsRedirection();
