@@ -20,7 +20,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
 // Redirects HTTP requests,
 app.UseHttpsRedirection();
 

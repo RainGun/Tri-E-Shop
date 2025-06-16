@@ -1,0 +1,241 @@
+{
+	"info": {
+		"_postman_id": "8a879851-3e86-4279-b41a-f009b6ac9ba8",
+		"name": "Tri-E-Shop API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "45915564"
+	},
+	"item": [
+		{
+			"name": "Get All Products",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": [
+				{
+					"name": "New Request",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": "https://localhost:7019/api/products"
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/problem+json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 16 Jun 2025 05:59:50 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Kestrel"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"type\": \"https://tools.ietf.org/html/rfc9110#section-15.5.4\",\n    \"title\": \"Forbidden\",\n    \"status\": 403,\n    \"traceId\": \"00-d2c88e0d3b7daf5870856b9f673404fd-24defab4c03a41fa-00\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Create New Order",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": [
+				{
+					"name": "New Order",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"customerId\": \"1a1a1a1a-1a1a-1a1a-1a1a-1a1a1a1a1a1a\",\r\n  \"orderItems\": [\r\n    {\r\n      \"productId\": \"prod-123\",\r\n      \"quantity\": 1\r\n    },\r\n    {\r\n      \"productId\": \"prod-456\",\r\n      \"quantity\": 2\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://localhost:7101/api/orders"
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 16 Jun 2025 06:05:53 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Kestrel"
+						},
+						{
+							"key": "Location",
+							"value": "https://localhost:7101/api/Orders/a3ac2372-0fc3-40f2-a1da-5275a3fae84f"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"a3ac2372-0fc3-40f2-a1da-5275a3fae84f\",\n    \"customerId\": \"1a1a1a1a-1a1a-1a1a-1a1a-1a1a1a1a1a1a\",\n    \"orderDate\": \"2025-06-16T06:05:54.4931572Z\",\n    \"totalAmount\": 59.97,\n    \"status\": \"Pending\",\n    \"orderDetails\": [\n        {\n            \"id\": \"45f146b0-2406-4f0b-b37a-95088e88397e\",\n            \"orderId\": \"00000000-0000-0000-0000-000000000000\",\n            \"productId\": \"prod-123\",\n            \"quantity\": 1,\n            \"unitPrice\": 19.99\n        },\n        {\n            \"id\": \"e276e15e-e7dd-4e97-834a-58550798d5ea\",\n            \"orderId\": \"00000000-0000-0000-0000-000000000000\",\n            \"productId\": \"prod-456\",\n            \"quantity\": 2,\n            \"unitPrice\": 19.99\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Process Payment (Success)",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": [
+				{
+					"name": "Process Payment (Success)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"orderId\": \"1a1a1a1a-1a1a-1a1a-1a1a-1a1a1a1a1a1a\",\r\n  \"amount\": 500.75,\r\n  \"cardNumber\": \"1234-5678-9012-3456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://localhost:7199/api/payments"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 16 Jun 2025 06:10:24 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Kestrel"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"paymentId\": \"240180df-3b76-4473-b0da-41467b773ddd\",\n    \"status\": \"Success\",\n    \"message\": \"Payment for order 1a1a1a1a-1a1a-1a1a-1a1a-1a1a1a1a1a1a was successfully processed.\"\n}"
+				},
+				{
+					"name": "Process Payment (Success) Copy",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"orderId\": \"1a1a1a1a-1a1a-1a1a-1a1a-1a1a1a1a1a1a\",\r\n  \"amount\": 500.75,\r\n  \"cardNumber\": \"1234-5678-9012-3456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://localhost:7199/api/payments"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 16 Jun 2025 06:10:24 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Kestrel"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"paymentId\": \"240180df-3b76-4473-b0da-41467b773ddd\",\n    \"status\": \"Success\",\n    \"message\": \"Payment for order 1a1a1a1a-1a1a-1a1a-1a1a-1a1a1a1a1a1a was successfully processed.\"\n}"
+				}
+			]
+		},
+		{
+			"name": "rocess Payment (Failed)",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": [
+				{
+					"name": "Process Payment (Failed)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"orderId\": \"1a1a1a1a-1a1a-1a1a-1a1a-1a1a1a1a1a1a\",\r\n  \"amount\": 1500,\r\n  \"cardNumber\": \"1234-5678-9012-3456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://localhost:7199/api/payments"
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 16 Jun 2025 06:12:34 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Kestrel"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"paymentId\": \"00000000-0000-0000-0000-000000000000\",\n    \"status\": \"Failed\",\n    \"message\": \"Payment for order 1a1a1a1a-1a1a-1a1a-1a1a-1a1a1a1a1a1a failed due to amount exceeding limit.\"\n}"
+				}
+			]
+		}
+	]
+}
