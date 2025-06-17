@@ -7,10 +7,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Add this line to configure MediatR
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
 // Builder 
 var app = builder.Build();
-
-// HTTP request pipeline.
 
 // Enables the swagger and UI.
 
