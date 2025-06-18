@@ -1,7 +1,5 @@
 namespace Products.API.Dtos;
 
-// Estructura de productos
-
 public class ProductDto
 {
     public string? Title { get; set; }

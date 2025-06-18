@@ -1,81 +1,68 @@
 using Microsoft.AspNetCore.Mvc;
 using Products.API.Dtos;
 
-namespace Products.API.Controllers
-{ 
+namespace Products.API.Controllers;
 
-    //Attributes are required for driver discovery and operation.Finalize Products API setup in Program.cs.
-
-    [ApiController]
-
-    [Route("api/[controller]")] 
-    public class ProductsController : ControllerBase // Inherits from ControllerBase.
+[ApiController]
+[Route("api/[controller]")]
+public class ProductsController(IHttpClientFactory httpClientFactory, ILogger<ProductsController> logger) : ControllerBase
+{
+    [HttpGet]
+    public async Task<IActionResult> GetAllProducts()
     {
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILogger<ProductsController> _logger;
-
-        public ProductsController(IHttpClientFactory httpClientFactory, ILogger<ProductsController> logger)
+        // We use the parameter 'logger' directly
+        logger.LogInformation("Attempting to get all products from external API.");
+        // We use the parameter 'httpClientFactory' directly
+        var client = httpClientFactory.CreateClient("PlatformSH");
+        
+        try
         {
-            _httpClientFactory = httpClientFactory;
-            _logger = logger;
+            var response = await client.GetAsync("products");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var products = await response.Content.ReadFromJsonAsync<List<ProductDto>>();
+                return Ok(products);
+            }
+
+            logger.LogWarning("The external API returned a non-success status code: {StatusCode}", response.StatusCode);
+            return StatusCode((int)response.StatusCode);
         }
-
-        [HttpGet] // The HttpGet defines the method as a get endpoint.
-        public async Task<IActionResult> GetAllProducts()
+        catch (Exception ex)
         {
-            _logger.LogInformation("Attempting to get all products from external API.");
-            var client = _httpClientFactory.CreateClient("PlatformSH");
-
-            try
-            {
-                var response = await client.GetAsync("products");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var products = await response.Content.ReadFromJsonAsync<List<ProductDto>>();
-                    return Ok(products);
-                }
-
-                _logger.LogWarning("The external API returned a non-success status code: {StatusCode}", response.StatusCode);
-                return StatusCode((int)response.StatusCode);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An exception occurred while fetching all products.");
-                return StatusCode(500, "An internal server error occurred.");
-            }
+            logger.LogError(ex, "An exception occurred while fetching all products.");
+            return StatusCode(500, "An internal server error occurred.");
         }
- 
-        //[HttpGet("{id}")] handles GET endpoint for retrieving a product by ID
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetProductById(string id)
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetProductById(string id)
+    {
+        logger.LogInformation("Attempting to get product with ID: {ProductId}", id);
+        var client = httpClientFactory.CreateClient("PlatformSH");
+
+        try
         {
-            _logger.LogInformation("Attempting to get product with ID: {ProductId}", id);
-            var client = _httpClientFactory.CreateClient("PlatformSH");
+            var response = await client.GetAsync($"products/{id}");
 
-            try
+            if (response.IsSuccessStatusCode)
             {
-                var response = await client.GetAsync($"products/{id}");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var product = await response.Content.ReadFromJsonAsync<ProductDto>();
-                    return Ok(product);
-                }
-
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    return NotFound();
-                }
-
-                _logger.LogWarning("The external API returned a non-success status code: {StatusCode} for product ID: {ProductId}", response.StatusCode, id);
-                return StatusCode((int)response.StatusCode);
+                var product = await response.Content.ReadFromJsonAsync<ProductDto>();
+                return Ok(product);
             }
-            catch (Exception ex)
+            
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                _logger.LogError(ex, "An exception occurred while fetching product with ID: {ProductId}", id);
-                return StatusCode(500, "An internal server error occurred.");
+                return NotFound();
             }
+
+            logger.LogWarning("The external API returned a non-success status code: {StatusCode} for product ID: {ProductId}", response.StatusCode, id);
+            return StatusCode((int)response.StatusCode);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An exception occurred while fetching product with ID: {ProductId}", id);
+            return StatusCode(500, "An internal server error occurred.");
         }
     }
 }
