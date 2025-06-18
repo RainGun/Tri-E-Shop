@@ -1,12 +1,10 @@
 ﻿using MediatR;
+using Orders.API.Data;
 using Orders.API.Entities;
 
-namespace Orders.API.Features.OrderFeatures.Commands; // File-scoped namespace
-
-// Primary constructor for dependency injection
+namespace Orders.API.Features.OrderFeatures.Commands;
 public class CreateOrderCommandHandler(ILogger<CreateOrderCommandHandler> logger) : IRequestHandler<CreateOrderCommand, Order>
 {
-    private static readonly List<Order> _orders = new();
     public Task<Order> Handle(CreateOrderCommand command, CancellationToken cancellationToken)
     {
         var newOrderDetails = command.OrderItems.Select(item => new OrderDetail
@@ -14,7 +12,7 @@ public class CreateOrderCommandHandler(ILogger<CreateOrderCommandHandler> logger
             Id = Guid.NewGuid(),
             ProductId = item.ProductId,
             Quantity = item.Quantity,
-            UnitPrice = 19.99m // Mock price
+            UnitPrice = 19.99m
         }).ToList();
 
         decimal totalAmount = newOrderDetails.Sum(item => item.Quantity * item.UnitPrice);
@@ -29,7 +27,7 @@ public class CreateOrderCommandHandler(ILogger<CreateOrderCommandHandler> logger
             OrderDetails = newOrderDetails
         };
 
-        _orders.Add(newOrder);
+        InMemoryDataStore.Orders.Add(newOrder);
         logger.LogInformation("Successfully created order {OrderId}", newOrder.Id);
 
         return Task.FromResult(newOrder);
