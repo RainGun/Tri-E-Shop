@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orders.API", "Orders.API\Or
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payment.API", "Payment.API\Payment.API.csproj", "{06141766-A327-4659-911D-D9BD2F96CB5A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security.API", "Security.API\Security.API.csproj", "{E07B060A-5738-4116-8E84-15817D938F01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{06141766-A327-4659-911D-D9BD2F96CB5A}.Release|x64.Build.0 = Release|Any CPU
 		{06141766-A327-4659-911D-D9BD2F96CB5A}.Release|x86.ActiveCfg = Release|Any CPU
 		{06141766-A327-4659-911D-D9BD2F96CB5A}.Release|x86.Build.0 = Release|Any CPU
+		{E07B060A-5738-4116-8E84-15817D938F01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E07B060A-5738-4116-8E84-15817D938F01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E07B060A-5738-4116-8E84-15817D938F01}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E07B060A-5738-4116-8E84-15817D938F01}.Debug|x64.Build.0 = Debug|Any CPU
+		{E07B060A-5738-4116-8E84-15817D938F01}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E07B060A-5738-4116-8E84-15817D938F01}.Debug|x86.Build.0 = Debug|Any CPU
+		{E07B060A-5738-4116-8E84-15817D938F01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E07B060A-5738-4116-8E84-15817D938F01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E07B060A-5738-4116-8E84-15817D938F01}.Release|x64.ActiveCfg = Release|Any CPU
+		{E07B060A-5738-4116-8E84-15817D938F01}.Release|x64.Build.0 = Release|Any CPU
+		{E07B060A-5738-4116-8E84-15817D938F01}.Release|x86.ActiveCfg = Release|Any CPU
+		{E07B060A-5738-4116-8E84-15817D938F01}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

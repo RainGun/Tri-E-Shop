@@ -1,0 +1,29 @@
+// Define a variable with the address where your Security.API is running.
+// Make sure to use the correct port from your console output (e.g., 7001).
+@Security.API_HostAddress = https://localhost:7001
+
+###
+# ----------------------------------------------------
+# Request 1: Successful Login
+# This should return a 200 OK with a JWT token.
+# ----------------------------------------------------
+POST {{Security.API_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "password"
+}
+
+###
+# ----------------------------------------------------
+# Request 2: Failed Login
+# This should return a 401 Unauthorized.
+# ----------------------------------------------------
+POST {{Security.API_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "wronguser",
+  "password": "wrongpassword"
+}
