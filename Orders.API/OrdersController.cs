@@ -1,14 +1,15 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization; // Make sure this using is present
 using Microsoft.AspNetCore.Mvc;
 using Orders.API.Dtos;
 using Orders.API.Features.OrderFeatures.Commands;
-using Orders.API.Features.OrderFeatures.Queries;
+using Orders.API.Features.OrderFeatures.Queries; // Make sure this using is present
 
-namespace Orders.API.Controllers; // File-scoped namespace
+namespace Orders.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-// Primary constructor for dependency injection
+[Authorize] // Protect all endpoints in this controller by default
 public class OrdersController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
@@ -19,24 +20,25 @@ public class OrdersController(IMediator mediator) : ControllerBase
             CustomerId = orderRequest.CustomerId,
             OrderItems = orderRequest.OrderItems
         };
-
         var createdOrder = await mediator.Send(command);
-
-        // This GetOrderById still needs to be refactored to CQRS
         return CreatedAtAction(nameof(GetOrderById), new { id = createdOrder.Id }, createdOrder);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetOrderById(Guid id)
     {
-        // Create the query object with the id from the route.
         var query = new GetOrderByIdQuery { Id = id };
-
-        // Send the query to MediatR. MediatR will find the correct handler and execute it.
         var order = await mediator.Send(query);
-
-        // Check the result from the handler. If it's null, return 404 Not Found.
-        // Otherwise, return 200 OK with the order.
         return order is not null ? Ok(order) : NotFound();
+    }
+
+    // This new endpoint is protected by a Role-based policy
+    [HttpGet("admin/all-orders")]
+    [Authorize(Roles = "Admin")] // This requires the user to have the "Admin" role in their token
+    public IActionResult GetAllOrdersForAdmin()
+    {
+        // For this test, we just return a success message.
+        // In a real app, you would return all orders from the InMemoryDataStore.
+        return Ok("Successfully accessed an Admin-only endpoint.");
     }
 }
