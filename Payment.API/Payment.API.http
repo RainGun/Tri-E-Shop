@@ -1,6 +1,32 @@
-@Payment.API_HostAddress = http://localhost:5122
-
-GET {{Payment.API_HostAddress}}/weatherforecast/
-Accept: application/json
+// Define a variable with the address where your Payment.API is running.
+@Payment.API_HostAddress = https://localhost:7201
 
 ###
+# ----------------------------------------------------
+# Request 1: Successful Payment Simulation
+# This calls the POST /api/payments endpoint with an amount <= 1000.
+# Expected Response: 200 OK
+# ----------------------------------------------------
+POST {{Payment.API_HostAddress}}/api/payments
+Content-Type: application/json
+
+{
+  "orderId": "1a1a1a1a-1a1a-1a1a-1a1a-1a1a1a1a1a1a",
+  "amount": 500.00,
+  "cardNumber": "1234-5678-9012-3456"
+}
+
+###
+# ----------------------------------------------------
+# Request 2: Failed Payment Simulation
+# This calls the POST /api/payments endpoint with an amount > 1000.
+# Expected Response: 400 Bad Request
+# ----------------------------------------------------
+POST {{Payment.API_HostAddress}}/api/payments
+Content-Type: application/json
+
+{
+  "orderId": "1a1a1a1a-1a1a-1a1a-1a1a-1a1a1a1a1a1a",
+  "amount": 1500.00,
+  "cardNumber": "1234-5678-9012-3456"
+}

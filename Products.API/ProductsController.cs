@@ -10,11 +10,9 @@ public class ProductsController(IHttpClientFactory httpClientFactory, ILogger<Pr
     [HttpGet]
     public async Task<IActionResult> GetAllProducts()
     {
-        // We use the parameter 'logger' directly
         logger.LogInformation("Attempting to get all products from external API.");
-        // We use the parameter 'httpClientFactory' directly
         var client = httpClientFactory.CreateClient("PlatformSH");
-        
+
         try
         {
             var response = await client.GetAsync("products");
@@ -25,8 +23,11 @@ public class ProductsController(IHttpClientFactory httpClientFactory, ILogger<Pr
                 return Ok(products);
             }
 
-            logger.LogWarning("The external API returned a non-success status code: {StatusCode}", response.StatusCode);
-            return StatusCode((int)response.StatusCode);
+            // --- IMPROVEMENT ---
+            // If the call fails, log it and pass the external error message through.
+            var errorContent = await response.Content.ReadAsStringAsync();
+            logger.LogWarning("The external API returned a non-success status code: {StatusCode}. Content: {ErrorContent}", response.StatusCode, errorContent);
+            return StatusCode((int)response.StatusCode, errorContent);
         }
         catch (Exception ex)
         {
@@ -50,14 +51,16 @@ public class ProductsController(IHttpClientFactory httpClientFactory, ILogger<Pr
                 var product = await response.Content.ReadFromJsonAsync<ProductDto>();
                 return Ok(product);
             }
-            
+
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 return NotFound();
             }
 
-            logger.LogWarning("The external API returned a non-success status code: {StatusCode} for product ID: {ProductId}", response.StatusCode, id);
-            return StatusCode((int)response.StatusCode);
+            // If the call fails, log it and pass the external error message through.
+            var errorContent = await response.Content.ReadAsStringAsync();
+            logger.LogWarning("The external API returned a non-success status code: {StatusCode} for product ID: {ProductId}. Content: {ErrorContent}", response.StatusCode, id, errorContent);
+            return StatusCode((int)response.StatusCode, errorContent);
         }
         catch (Exception ex)
         {

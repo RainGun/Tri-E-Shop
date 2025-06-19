@@ -10,7 +10,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
-// --- NUEVO: AÑADIR CONFIGURACIÓN DE AUTENTICACIÓN JWT ---
 // This teaches the API how to read and validate JWTs.
 builder.Services.AddAuthentication(options =>
 {

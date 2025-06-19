@@ -1,11 +1,20 @@
-@Products.API_HostAddress = http://localhost:5000
+// Define a variable with the address where your Products.API is running.
+@Products.API_HostAddress = https://localhost:7019
 
+###
+# ----------------------------------------------------
+# Request 1: Get All Products
+# This calls the GET /api/products endpoint.
+# Note: This endpoint does not require authorization.
+# ----------------------------------------------------
+GET {{Products.API_HostAddress}}/api/products
+Accept: application/json
 
-//In Products.API/Program.cs
-
-builder.Services.AddHttpClient("PlatformSH", client =>
-{
-    // Api URL
-    client.BaseAddress = new Uri("https://api.platform.sh/api/projects/pj2g557uk2z2g/");
-});
-
+###
+# ----------------------------------------------------
+# Request 2: Get a Single Product by ID
+# This calls the GET /api/products/{id} endpoint.
+# (This is an example ID from the Platform.sh API)
+# ----------------------------------------------------
+GET {{Products.API_HostAddress}}/api/products/d7f3f1e1-3e4c-4a3d-9b8b-2c6b6e0b3a1a
+Accept: application/json

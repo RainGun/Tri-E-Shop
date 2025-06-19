@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization; // Make sure this using is present
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Orders.API.Dtos;
 using Orders.API.Features.OrderFeatures.Commands;
-using Orders.API.Features.OrderFeatures.Queries; // Make sure this using is present
+using Orders.API.Features.OrderFeatures.Queries;
 
 namespace Orders.API.Controllers;
 
@@ -37,8 +37,6 @@ public class OrdersController(IMediator mediator) : ControllerBase
     [Authorize(Roles = "Admin")] // This requires the user to have the "Admin" role in their token
     public IActionResult GetAllOrdersForAdmin()
     {
-        // For this test, we just return a success message.
-        // In a real app, you would return all orders from the InMemoryDataStore.
         return Ok("Successfully accessed an Admin-only endpoint.");
     }
 }

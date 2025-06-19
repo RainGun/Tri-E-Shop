@@ -1,6 +1,33 @@
-@Orders.API_HostAddress = http://localhost:5095
-
-GET {{Orders.API_HostAddress}}/weatherforecast/
-Accept: application/json
+// Define a variable with the address where your Orders.API is running.
+@Orders.API_HostAddress = https://localhost:7101
 
 ###
+# ----------------------------------------------------
+# Request 1: Create a New Order (Protected)
+# This calls the POST /api/orders endpoint.
+# ----------------------------------------------------
+POST {{Orders.API_HostAddress}}/api/orders
+Content-Type: application/json
+# You need a valid JWT to access this endpoint.
+Authorization: Bearer <Token Here>
+
+{
+  "customerId": "1a1a1a1a-1a1a-1a1a-1a1a-1a1a1a1a1a1a",
+  "orderItems": [
+    {
+      "productId": "prod-123",
+      "quantity": 1
+    }
+  ]
+}
+
+
+###
+# ----------------------------------------------------
+# Request 2: Get an Order by ID (Protected)
+# This calls the GET /api/orders/{id} endpoint.
+# ----------------------------------------------------
+# Replace the GUID below with a real order ID from the POST response.
+GET {{Orders.API_HostAddress}}/api/orders/e154f5e6-ee8d-4e0d-a83c-4094fff703df
+# You need a valid JWT to access this endpoint.
+Authorization: Bearer <Token Here>

@@ -11,7 +11,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpClient("PlatformSH", client =>
 {
-    client.BaseAddress = new Uri("https://api.platform.sh/api/projects/pj2g557uk2z2g/");
+    // Reads the URL from the appsettings.json file
+    var baseUrl = builder.Configuration["ExternalApis:PlatformSH:BaseUrl"];
+    client.BaseAddress = new Uri(baseUrl!);
 });
 
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -30,7 +32,6 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 // HTTP request pipeline.
-
 // Enables the swagger and UI.
 
 if (app.Environment.IsDevelopment())
