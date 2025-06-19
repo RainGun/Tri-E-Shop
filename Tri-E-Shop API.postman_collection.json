@@ -12,8 +12,39 @@
 				{
 					"name": "POST Create New Order",
 					"request": {
-						"method": "GET",
-						"header": []
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"customerId\": \"1a1a1a1a-1a1a-1a1a-1a1a-1a1a1a1a1a1a\",\r\n  \"orderItems\": [\r\n    {\r\n      \"productId\": \"prod-123\",\r\n      \"quantity\": 1\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7101/api/orders",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7101",
+							"path": [
+								"api",
+								"orders"
+							]
+						}
 					},
 					"response": [
 						{
@@ -131,8 +162,29 @@
 				{
 					"name": "POST Process Payment (Success)",
 					"request": {
-						"method": "GET",
-						"header": []
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"orderId\": \"1a1a1a1a-1a1a-1a1a-1a1a-1a1a1a1a1a1a\",\r\n  \"amount\": 500.75,\r\n  \"cardNumber\": \"1234-5678-9012-3456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7199/api/payments",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7199",
+							"path": [
+								"api",
+								"payments"
+							]
+						}
 					},
 					"response": [
 						{
@@ -191,8 +243,29 @@
 				{
 					"name": "POST Process Payment (Failed)",
 					"request": {
-						"method": "GET",
-						"header": []
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"orderId\": \"1a1a1a1a-1a1a-1a1a-1a1a-1a1a1a1a1a1a\",\r\n  \"amount\": 1500.00,\r\n  \"cardNumber\": \"1234-5678-9012-3456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7199/api/payments",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7199",
+							"path": [
+								"api",
+								"payments"
+							]
+						}
 					},
 					"response": [
 						{
@@ -250,63 +323,69 @@
 				},
 				{
 					"name": "Login And Get Token",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"if (response.token) {\r",
+									"    pm.collectionVariables.set(\"jwt_token\", response.token);\r",
+									"    console.log(\"JWT Token saved to collection variable.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
-						"method": "GET",
-						"header": []
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwt_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"username\": \"test\", \"password\": \"password\" }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7269/api/auth/login",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7269",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
 					},
 					"response": [
-						{
-							"name": "Get token (Success)",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{ \"username\": \"test\", \"password\": \"password\" }",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "https://localhost:7269/api/auth/login",
-									"protocol": "https",
-									"host": [
-										"localhost"
-									],
-									"port": "7269",
-									"path": [
-										"api",
-										"auth",
-										"login"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Date",
-									"value": "Thu, 19 Jun 2025 02:24:48 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "Kestrel"
-								},
-								{
-									"key": "Transfer-Encoding",
-									"value": "chunked"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJqdGkiOiI1NWEyOTczMC05NWMwLTQyMzAtODMxNi0yYjM3ZjE2MWMzZWEiLCJleHAiOjE3NTAzMDM0ODksImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcwMDEiLCJhdWQiOiJTaG9wcGluZ0NhcnRDbGllbnQifQ.ZHVaKGnZHEaCPryFZU0eHtPpgODwF5nK3sweSSuE0gI\"\n}"
-						},
 						{
 							"name": "Get token (Success)",
 							"originalRequest": {
@@ -358,6 +437,139 @@
 							],
 							"cookie": [],
 							"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJqdGkiOiJhZjI1MDJhNy00MTFjLTQ4YjUtOTRjYi1hMDA3ZTIwOTk2ZWUiLCJleHAiOjE3NTAzMDUyNDcsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcwMDEiLCJhdWQiOiJTaG9wcGluZ0NhcnRDbGllbnQifQ.fZ9_C0kUR8haojUIrzDLbW3Rig-GfOEikqxzBhf51xw\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7019/api/products",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7019",
+							"path": [
+								"api",
+								"products"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Denied",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7019/api/products",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7019",
+									"path": [
+										"api",
+										"products"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "text/plain; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 19 Jun 2025 04:36:01 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\"status\":403,\"message\":\"You do not have permission to access this project or it does not exist.\"}\n"
+						}
+					]
+				},
+				{
+					"name": "Get Order By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7101/api/orders/{{orderId}}",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7101",
+							"path": [
+								"api",
+								"orders",
+								"{{orderId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Denied",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7101/api/orders/{{orderId}}",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7101",
+									"path": [
+										"api",
+										"orders",
+										"{{orderId}}"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "plain",
+							"header": [
+								{
+									"key": "Content-Length",
+									"value": "0"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 19 Jun 2025 04:36:07 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "WWW-Authenticate",
+									"value": "Bearer"
+								}
+							],
+							"cookie": [],
+							"body": null
 						}
 					]
 				}
