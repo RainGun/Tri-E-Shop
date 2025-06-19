@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging; // Add this using for ILogger
 using Microsoft.IdentityModel.Tokens;
 using Security.API.Dtos;
 using System.IdentityModel.Tokens.Jwt;
@@ -7,7 +9,8 @@ using System.Text;
 
 namespace Security.API.Features.AuthFeatures.Commands;
 
-public class LoginCommandHandler(IConfiguration configuration)
+// CHANGE 1: Inject ILogger into the primary constructor
+public class LoginCommandHandler(IConfiguration configuration, ILogger<LoginCommandHandler> logger)
     : IRequestHandler<LoginCommand, LoginResponseDto>
 {
     public Task<LoginResponseDto> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -15,9 +18,11 @@ public class LoginCommandHandler(IConfiguration configuration)
         // 1. Read the demo user's data from the configuration file.
         var demoUser = configuration.GetSection("DemoUser");
 
-        // 2. Validate credentials against the configuration file.
         if (request.Username != demoUser["Username"] || request.Password != demoUser["Password"])
         {
+            //2. Log a warning for the failed login attempt.
+            logger.LogWarning("Failed login attempt for user: {Username}", request.Username);
+
             return Task.FromResult<LoginResponseDto>(null!);
         }
 
@@ -34,11 +39,11 @@ public class LoginCommandHandler(IConfiguration configuration)
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]!));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-        // 4. Create the claims, now including the user's role.
+        // 4.Create the claims, now including the user's role.
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, username),
-            new Claim(ClaimTypes.Role, role), // The user's role is now part of the token.
+            new Claim(ClaimTypes.Role, role),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
